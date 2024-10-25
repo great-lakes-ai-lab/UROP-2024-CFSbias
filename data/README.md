@@ -1,15 +1,25 @@
-# Data Directory
+## Common variables that are in both CFSv2 and CFSR
 
-This directory contains dataset files and any supplementary data needed for the project.
-
-## Dataset Descriptions
-- **[Dataset 1]:** Description of the first dataset, including source, format, and relevant details.
-- **[Dataset 2]:** Description of the second dataset, including source, format, and relevant details.
-- ...
-
-## Usage
-Please follow the data handling and preprocessing instructions provided in the project documentation to prepare the datasets for analysis.
-
-## Additional Notes
-- Ensure the data is stored in the appropriate format and directory structure as described.
-- If new datasets are added, update this README file with relevant details.
+| **Variable Name**                                             | **Unit**       | **Min Value** | **Max Value** | **Description**                                                                                         |
+|---------------------------------------------------------------|----------------|---------------|---------------|---------------------------------------------------------------------------------------------------------|
+| Downward_Long-Wave_Radp_Flux_surface                          | W/m^2          | 60            | 530           | Downward Long-Wave Rad. Flux at ground or water surface                                                  |
+| Downward_Short-Wave_Radiation_Flux_surface                    | W/m^2          | 0             | 1224          | Downward Short-Wave Radiation Flux at ground or water surface                                            |
+| Latent_heat_net_flux_surface                                  | W/m^2          | -399          | 1675          | Latent heat net flux at ground or water surface                                                          |
+| Maximum_specific_humidity_at_2m_height_above_ground           | Mass fraction  | 0             | 0.1           | Maximum specific humidity at 2m height above ground                                                      |
+| Maximum_temperature_height_above_ground                       | K              | 189.8         | 334.89        | Maximum temperature at height above ground                                                               |
+| Minimum_specific_humidity_at_2m_height_above_ground           | Mass fraction  | 0             | 0.02          | Minimum specific humidity at 2m height above ground                                                      |
+| Minimum_temperature_height_above_ground                       | K              | 188.39        | 324.39        | Minimum temperature at height above ground                                                               |
+| Potential_Evaporation_Rate_surface                            | W/m^2          | -202          | 6277          | Potential evaporation rate at ground or water surface                                                    |
+| Precipitation_rate_surface                                    | kg/m^2/s       | 0             | 0.03          | Precipitation rate at ground or water surface                                                            |
+| Pressure_surface                                              | Pa             | 47200         | 109180        | Pressure at ground or water surface                                                                      |
+| Sensible_heat_net_flux_surface                                | W/m^2          | -2295          | 3112         | Sensible heat net flux at ground or water surface                                                        |
+| Specific_humidity_height_above_ground                         | Mass fraction  | 0             | 0.06          | Specific humidity at specified height level above ground                                                 |
+| Temperature_height_above_ground                               | K              | 188.96        | 328.68        | Temperature at specified height level above ground                                                       |
+| u-component_of_wind_height_above_ground                       | m/s            | -57.2         | 57.99         | u-component of wind at specified height above ground                                                     |
+| Upward_Long-Wave_Radp_Flux_surface                            | W/m^2          | 59            | 757           | Upward Long-Wave Rad. Flux at ground or water surface                                                    |
+| Upward_Short-Wave_Radiation_Flux_surface                      | W/m^2          | 0             | 812           | Upward Short-Wave Radiation Flux at ground or water surface                                              |
+| v-component_of_wind_height_above_ground                       | m/s            | -53.09        | 57.11         | v-component of wind at specified height above ground                                                     |
+| Volumetric_Soil_Moisture_Content_depth_below_surface_layer_5_cm  | Fraction       | 0.02          | 1             | Volumetric soil moisture content 5cm below surface layer                                                 |
+| Volumetric_Soil_Moisture_Content_depth_below_surface_layer_25_cm | Fraction       | 0.02          | 1             | Volumetric soil moisture content 25cm below surface layer                                                |
+| Volumetric_Soil_Moisture_Content_depth_below_surface_layer_70_cm | Fraction       | 0.02          | 1             | Volumetric soil moisture content 70cm below surface layer                                                |
+| Volumetric_Soil_Moisture_Content_depth_below_surface_layer_150_cm| Fraction      | 0.02          | 1             | Volumetric soil moisture content 150cm below surface layer                                               |
