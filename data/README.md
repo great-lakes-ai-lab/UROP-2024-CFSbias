@@ -1,4 +1,4 @@
-# Data Description
+# Data Description: Climate Forecast System (CFS) version 2
 
 Our project uses archived weather forecast data from the Climate Forecast System (CFS) version 2. These datasets contain a variety of meteorological variables critical for our analysis and model training. Below, we describe the specific variables we will use for this project and provide additional details on accessing and using these datasets on the U-M HPC.
 
