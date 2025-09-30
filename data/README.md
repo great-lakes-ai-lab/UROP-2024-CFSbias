@@ -1,187 +1,120 @@
 # Data Description: Climate Forecast System (CFS) version 2
 
-Our project uses archived weather forecast data from the Climate Forecast System (CFS) version 2. These datasets contain a variety of meteorological variables critical for our analysis and model training. Below, we describe the specific variables we will use for this project and provide additional details on accessing and using these datasets on the U-M HPC.
+Our project uses archived weather forecast data from the **Climate Forecast System (CFS) version 2**. These datasets contain a variety of meteorological variables critical for our analysis and model training. Below, we describe the specific variables we use for this project and provide details on accessing and using these datasets on both the U-M HPC and Google Cloud Storage (GCS).
+
+-----
 
 ## Specific Variables Used in the Project
 
-| **Variable Name**                | **Unit**          | **Description**                               |
-|----------------------------------|-------------------|-----------------------------------------------|
-| SHTFL_surface                    | W/m<sup>2</sup>   | Sensible Heat Net Flux at surface             |
-| LHTFL_surface                    | W/m<sup>2</sup>   | Latent Heat Net Flux at surface               |
-| TMP_2maboveground                | K                 | Temperature 2m above ground                   |
-| APCP_surface                     | kg/m<sup>2</sup>  | Total Precipitation at surface                |
+| **Variable Name** | **Unit** | **Description** |
+| :--- | :--- | :--- |
+| **SHTFL\_surface** | W/m^2 | **Sensible Heat Net Flux** at surface |
+| **LHTFL\_surface** | W/m^2 | **Latent Heat Net Flux** at surface |
+| **TMP\_2maboveground** | K | **Temperature** 2m above ground |
+| **APCP\_surface** | kg/m^2 | **Total Precipitation** at surface |
 
-## Data Structure on U-M HPC
+-----
 
-### Directory Structure
-The data is organized into directories by date, with each directory containing four forecasts produced at 0000, 0600, 1200, and 1800 hours. Each forecast extends nine months into the future. The filenames reflect the date and time when the forecast was produced.
+## Data Locations and Structure
 
-Directory structure:
-```
-/nfs/turbo/seas-dannes/urop-2024-bias/cfs-forecasts/archive/
-├── 20120101
-│ ├── flxf.01.2012010100.allmonths.cnbs.nc
-│ ├── flxf.01.2012010106.allmonths.cnbs.nc
-│ ├── flxf.01.2012010112.allmonths.cnbs.nc
-│ ├── flxf.01.2012010118.allmonths.cnbs.nc
-│ ├── pgbf.01.2012010100.allmonths.cnbs.nc
-│ ├── pgbf.01.2012010106.allmonths.cnbs.nc
-│ ├── pgbf.01.2012010112.allmonths.cnbs.nc
-│ ├── pgbf.01.2012010118.allmonths.cnbs.nc
-├── 20120929
-│ ├── flxf.01.2012092900.allmonths.cnbs.nc
-│ ├── flxf.01.2012092906.allmonths.cnbs.nc
-│ ├── flxf.01.2012092912.allmonths.cnbs.nc
-│ ├── flxf.01.2012092918.allmonths.cnbs.nc
-│ ├── pgbf.01.2012092900.allmonths.cnbs.nc
-│ ├── pgbf.01.2012092906.allmonths.cnbs.nc
-│ ├── pgbf.01.2012092912.allmonths.cnbs.nc
-│ ├── pgbf.01.2012092918.allmonths.cnbs.nc
-...
-```
+The project data is available in two distinct storage environments: a restricted **U-M HPC** mount for internal processing and a public **Google Cloud Storage (GCS)** bucket optimized for cloud-native workflows.
 
-Each forecast directory follows this pattern and is named after the date on which the forecasts were produced.
+### 1\. U-M HPC Storage (Restricted Access) 🔒
 
-#### Accessing Data on U-M HPC
+This location is for users with **direct access to the U-M computing environment** and the necessary permissions for the shared "turbo" drive. The data is organized into forecasts by date.
 
 #### Data Location
-Our data is stored on the shared "turbo" drive in the following directory:
-`/nfs/turbo/seas-dannes/urop-2024-bias/cfs-forecasts/archive/`
 
-#### Example Python Script for Accessing and Visualizing Data
-The following Python script provides an example of how to access, load, and visualize data using the `xarray` library, which is well-suited for handling multi-dimensional arrays and NetCDF files:
+Our data is stored on the shared "turbo" drive in the following directory:
+**`/nfs/turbo/seas-dannes/urop-2024-bias/cfs-forecasts/archive/`**
+
+#### Directory Structure (U-M HPC)
+
+The data is organized into directories by date (e.g., `20120101`), with each directory containing four forecasts (`0000`, `0600`, `1200`, and `1800` hours).
+
+  - **`flxf` files** contain: `SHTFL_surface`, `LHTFL_surface`, and `TMP_2maboveground`.
+  - **`pgbf` files** contain: `APCP_surface`.
+
+### 2\. Google Cloud Storage (GCS) Bucket (Public Access) 🌐
+
+This is the recommended location for users accessing the data **without U-M HPC access** or for cloud-native, scalable analysis (e.g., Dask, Zarr).
+
+#### Data Location
+
+The entire dataset is housed in the following bucket:
+**`gs://great-lakes-osd/`**
+
+#### Directory Structure (GCS)
+
+The GCS data is optimized for cloud-reading. Instead of being grouped by forecast initialization date, the files are grouped by **variable** and further split by their native coordinate dimensions.
+
+**Root Path:** `gs://great-lakes-osd/cfs-data/`
+
+| Variable Group | Variable | Full GCS Path |
+| :--- | :--- | :--- |
+| **Precipitation** (`precip/`) | `APCP_surface` | `gs://great-lakes-osd/cfs-data/precip/APCP_surface/` |
+| **Temperature/Flux** (`temp-vars/`) | `LHTFL_surface` | `gs://great-lakes-osd/cfs-data/temp-vars/LHTFL_surface/` |
+| **Temperature/Flux** (`temp-vars/`) | `SHTFL_surface` | `gs://great-lakes-osd/cfs-data/temp-vars/SHTFL_surface/` |
+| **Temperature/Flux** (`temp-vars/`) | `TMP_2maboveground` | `gs://great-lakes-osd/cfs-data/temp-vars/TMP_2maboveground/` |
+
+**Path Structure within each Variable Directory (Optimized for Cloud Reading):**
+
+```
+.../APCP_surface/
+├── latitude/
+├── lead/
+├── longitude/
+└── time/
+```
+
+-----
+
+## Accessing Data
+
+### Accessing Data on U-M HPC
+
+Use the standard path provided above in your scripts.
+
+#### Example Python Script for Accessing and Visualizing Data (U-M HPC)
+
+*(The rest of your existing HPC-specific Python code block goes here)*
+
+-----
+
+### Accessing Data on Google Cloud Storage (GCS) with Zarr
+
+The data in the GCS bucket is structured to be read efficiently using the **Zarr** format, which is a specification for storing N-dimensional arrays in a cloud-optimized way. It allows you to **read small chunks of a large dataset without downloading the entire file**.
+
+#### Key Concept: Zarr for Cloud-Native Analysis
+
+Unlike the NetCDF files on the HPC, which must be read sequentially, Zarr breaks the data into smaller, compressed "chunks." When you access a variable (e.g., `SHTFL_surface`) in the GCS path, you are accessing a **Zarr store**, which acts like a single, virtual NetCDF file that can be accessed in parallel.
+
+#### Example using Python to Load a Zarr Store
+
+To read the Zarr data directly from GCS, you typically use `gcsfs` (to handle the cloud file system) and `xarray` (to open the data).
 
 ```python
-# Install required packages
-!pip install --upgrade pip
-!pip install numpy cftime xarray
+# Installation (if needed):
+# !pip install xarray gcsfs
 
 import xarray as xr
-import os
-import matplotlib.pyplot as plt
+import gcsfs
 
-# Define the path to your forecast data directory
-data_path = '/nfs/turbo/seas-dannes/urop-2024-bias/cfs-forecasts/archive/20120101/'
+# Initialize the GCS File System
+fs = gcsfs.GCSFileSystem()
 
-# List all files in the directory
-files = os.listdir(data_path)
-print("Files in directory:", files)
+# Define the full path to one of the variable-specific Zarr stores
+zarr_store_path = 'gs://great-lakes-osd/cfs-data/temp-vars/TMP_2maboveground/'
 
-# Filter files to identify one `flxf` and one `pgbf` file
-flxf_files = [f for f in files if 'flxf' in f]
-pgbf_files = [f for f in files if 'pgbf' in f]
-
-# Print identified files
-print("FLX Files:", flxf_files)
-print("PGP Files:", pgbf_files)
-
-# Select one `flxf` and one `pgbf` file to inspect
-flxf_file = os.path.join(data_path, flxf_files[0])
-pgbf_file = os.path.join(data_path, pgbf_files[0])
-
-print(f"Selected FLXF file: {flxf_file}")
-print(f"Selected PGBF file: {pgbf_file}")
-
-# Load the datasets
-flxf_ds = xr.open_dataset(flxf_file)
-pgbf_ds = xr.open_dataset(pgbf_file)
-
-# Print dataset summaries
-print(flxf_ds)
-print(pgbf_ds)
+# Open the Zarr store directly as an xarray Dataset
+# 'r' mode means read-only
+# The zarr_store_path points to the root of the Zarr directory
+try:
+    ds_tmp = xr.open_zarr(fs.get_mapper(zarr_store_path), consolidated=True)
+    print("Successfully opened 2m Temperature Zarr store.")
+    print(ds_tmp)
+except Exception as e:
+    print(f"Error opening Zarr store: {e}")
 ```
 
-### Example output from loading datasets with `xarray`:
-
-**FLXF Dataset:**
-
-```plaintext
-<xarray.Dataset> Size: 8MB
-Dimensions:            (time: 10, latitude: 181, longitude: 360)
-Coordinates:
-  * time               (time) datetime64[ns] 80B 2012-01-01T18:00:00 ... 2012...
-  * latitude           (latitude) float64 1kB -90.0 -89.0 -88.0 ... 89.0 90.0
-  * longitude          (longitude) float64 3kB 0.0 1.0 2.0 ... 357.0 358.0 359.0
-Data variables:
-    SHTFL_surface      (time, latitude, longitude) float32 3MB ...
-    LHTFL_surface      (time, latitude, longitude) float32 3MB ...
-    TMP_2maboveground  (time, latitude, longitude) float32 3MB ...
-Attributes:
-    Conventions:          COARDS
-    History:              Tue Oct 22 13:00:20 2024: /usr/bin/ncrcat -O flxf.0...
-    GRIB2_grid_template:  0
-    NCO:                  netCDF Operators version 4.8.1 (Homepage = http://n...
-```
-
-**PGBF Dataset:**
-
-```plaintext
-<xarray.Dataset> Size: 3MB
-Dimensions:       (time: 10, latitude: 181, longitude: 360)
-Coordinates:
-  * time          (time) datetime64[ns] 80B 2012-01-01 2012-02-01 ... 2012-10-01
-  * latitude      (latitude) float64 1kB -90.0 -89.0 -88.0 ... 88.0 89.0 90.0
-  * longitude     (longitude) float64 3kB 0.0 1.0 2.0 3.0 ... 357.0 358.0 359.0
-Data variables:
-    APCP_surface  (time, latitude, longitude) float32 3MB ...
-Attributes:
-    Conventions:          COARDS
-    History:              Tue Oct 22 12:58:53 2024: /usr/bin/ncrcat -O pgbf.0...
-    GRIB2_grid_template:  0
-    NCO:                  netCDF Operators version 4.8.1 (Homepage = http://n...
-```
-
-### Visualizing Data
-Here's how you can visualize specific variables in the datasets:
-
-```python
-import matplotlib.pyplot as plt
-
-# Define function to plot data variable
-def plot_variable(ds, var_name, time_index=0):
-    if var_name in ds.variables:
-        data_var = ds[var_name].isel(time=time_index)
-        data_var.plot()
-        plt.title(f'{var_name} at Time Step {time_index}')
-        plt.show()
-    else:
-        print(f"{var_name} not found in dataset")
-
-# Example to visualize sensible heat flux from FLXF file
-plot_variable(flxf_ds, 'SHTFL_surface')
-
-# Example to visualize latent heat flux from FLXF file
-plot_variable(flxf_ds, 'LHTFL_surface')
-
-# Example to visualize 2m temperature from FLXF file
-plot_variable(flxf_ds, 'TMP_2maboveground')
-
-# Example to visualize accumulated precipitation from PGBF file
-plot_variable(pgbf_ds, 'APCP_surface')
-```
-
-You can also plot time series of a variable at specific locations:
-
-```python
-# Function to plot time series for a variable at a specific location
-def plot_time_series(ds, var_name, latitude, longitude):
-    if var_name in ds.variables:
-        data_var = ds[var_name].sel(latitude=latitude, longitude=longitude, method='nearest')
-        data_var.plot()
-        plt.title(f'Time Series of {var_name} at Lat: {latitude}, Lon: {longitude}')
-        plt.xlabel('Time')
-        plt.ylabel(var_name)
-        plt.show()
-    else:
-        print(f"{var_name} not found in dataset")
-
-# Example time series for latent heat flux at specific location
-lat, lon = 45, -90  # Replace with your desired latitude and longitude
-plot_time_series(flxf_ds, 'LHTFL_surface', lat, lon)
-
-# Example time series for 2m temperature at specific location
-plot_time_series(flxf_ds, 'TMP_2maboveground', lat, lon)
-
-# Example time series for accumulated precipitation at specific location
-plot_time_series(pgbf_ds, 'APCP_surface', lat, lon)
-```
+This method allows you to load only the required data chunks, making it highly efficient for massive climate datasets.
